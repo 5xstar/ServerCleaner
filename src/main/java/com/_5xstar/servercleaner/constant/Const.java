@@ -63,10 +63,10 @@ public class Const {
         final Properties p = new Properties();
         FileInputStream in = null;
         try{
-            File propFile = new File("Const.properties");  //检查运行目录
+            File propFile = new File("com/_5xstar/servercleaner/constant/Const.properties");  //检查运行目录
             System.out.println("run path propFile = " + propFile.getAbsolutePath());
             if(!propFile.exists()) {
-                final URL url = Const.class.getResource("Const.properties");
+                final URL url = Const.class.getResource("com/_5xstar/servercleaner/constant/Const.properties");
                 System.out.println("url=" + url);
                 if(url!=null){
                     final File _propFile = new File(url.getFile());
