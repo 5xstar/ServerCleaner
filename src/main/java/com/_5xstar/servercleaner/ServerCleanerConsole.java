@@ -1,6 +1,7 @@
 package com._5xstar.servercleaner;
 
 import com._5xstar.servercleaner.test.ServerCleanerTest;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,6 +39,13 @@ public class ServerCleanerConsole {
                 return;
             }
             clean(d);
+        }else if(line.startsWith("prepare ")){
+            String d = line.substring("prepare ".length());
+            if(d==null || "".equals(d=d.trim())){
+                System.out.println("Please input prepare full-path  (so as: prepare d:\\mydir\\test");
+                return;
+            }
+            prepare(d);
         }
     }
     private static void clean(String dirStr)throws IOException{
@@ -59,6 +67,25 @@ public class ServerCleanerConsole {
         }finally{
             if(preparer!=null)try{preparer.close();}catch (Exception e){}
             if(judger!=null)try{judger.close();}catch (Exception e){}
+        }
+    }
+    private static void prepare(String dirStr)throws IOException{
+        ServerCleaner sc = ServerCleaner.serverCleaner;
+        Preparer preparer = null;
+        try {
+            preparer = sc.getPreparer();
+            File dir = new File(dirStr);
+            preparer.prepare(dir);
+            File data = preparer.finished();
+            preparer.close();
+            File[] datas = preparer.getSerFiles();
+            if(datas!=null && datas.length==2){  //备份Preparer对象和文件数据
+                FileUtils.copyFile(datas[0], new File("test.obj"));
+                FileUtils.copyFile(datas[1], new File("test.dat"));
+            }
+            preparer = null;
+        }finally{
+            if(preparer!=null)try{preparer.close();}catch (Exception e){}
         }
     }
 }
